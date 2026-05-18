@@ -306,35 +306,9 @@ Generate tokens at [nexusai.run/app/tokens](https://nexusai.run/app/tokens). Ful
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, TypeScript, Vite 7, Tailwind CSS |
-| Backend | Node.js, Express, TypeScript |
-| ORM | Prisma |
-| Database | PostgreSQL |
-| Cache | Redis |
-| Object storage (managed) | MinIO (S3-compatible, per-bucket IAM service accounts) |
-| Ingress | Traefik (per-deployment networks, Let's Encrypt certificates) |
-| Container runtime | Docker (Compose for full-stack deploys) |
-| OAuth | PKCE + auth code, JWT access tokens, 23 scopes |
-| Encryption | AES-256-GCM (secrets, bucket credentials), TLS 1.2+ (transit) |
-| Auth | JWT + optional SAML / OIDC SSO |
-| Cloud single-container targets | AWS App Runner, Google Cloud Run, Azure Container Apps |
-| Process supervision | systemd (`nexus-backend.service` with `StateDirectory=nexus/deployments nexus/docker`) |
-
----
-
 ## Reliability
 
 NEXUS AI is built to keep stateful apps alive across host reboots, backend restarts, and manual stop/start cycles. The reliability layer:
-
-- **Persistent compose workdirs** at `/var/lib/nexus/deployments` so the orchestrator survives `PrivateTmp` and `tmpfs` wipes
-- **Soft stop semantics**: `docker compose stop` (not `down`) preserves containers, networks, volumes, and the port reservation
-- **Boot reconciliation** runs 5 seconds after backend startup, verifies every `RUNNING` deployment is actually running, and restarts any that are down
-- **Replica preservation** across restart: scale state survives stop/start and reboot
-- **`restart: unless-stopped`** on every container so Docker brings them back automatically
 
 Deep dive: [How NEXUS AI keeps your Postgres alive across host reboots](https://nexusai.run/blog/how-nexus-ai-keeps-your-postgres-alive-across-host-reboots).
 
