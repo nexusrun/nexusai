@@ -1,6 +1,6 @@
 # NEXUS AI
 
-**MCP-native application platform. Deploy full-stack apps from a prompt, a repo, or a CLI. Your AI agent runs the rest.**
+**Full-stack application platform. Deploy full-stack apps from a prompt, a repo, or a CLI. Your AI agent runs the rest.**
 
 [![Website](https://img.shields.io/badge/Website-nexusai.run-0ea5e9?style=flat-square)](https://nexusai.run)
 [![Pricing](https://img.shields.io/badge/Pricing-from%20%2429%2Fmo-38bdf8?style=flat-square)](https://nexusai.run/pricing)
