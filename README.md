@@ -13,7 +13,7 @@
 
 ## What is NEXUS AI?
 
-NEXUS AI is an **MCP-native application platform** that deploys full-stack containerized applications (app code, Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, encrypted backups) in about 5 minutes. Every platform action is callable as a Model Context Protocol (MCP) tool, so Claude, Cursor, Codex, or any MCP-compatible agent can deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
+NEXUS AI is an **Full-stack application platform** that deploys full-stack containerized applications (app code, Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, encrypted backups) in about 5 minutes. Every platform action is callable as a Model Context Protocol (MCP) tool, so Claude, Cursor, Codex, or any MCP-compatible agent can deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
 
 **The problem it solves.** AI tools like Claude Code, Cursor, v0, Bolt, Lovable, and Replit can generate working application code in minutes. Getting that code into production still requires the rest of a real stack: a database, a queue, storage, secrets, scaling, health checks, backups, rollbacks. NEXUS AI is the deploy layer that closes that gap and exposes every operation to the agent that wrote the code.
 
