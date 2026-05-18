@@ -356,6 +356,7 @@ NEXUS AI exposes a REST API and a full suite of Model Context Protocol (MCP) too
 - **Support**: support@nexusai.run
 - **Sales**: [nexusai.run/contact](https://nexusai.run/contact)
 - **LinkedIn**: [linkedin.com/company/nexusai-run](https://linkedin.com/company/nexusai-run)
+- [![smithery badge](https://smithery.ai/badge/saif-elyzal/NEXUSRUN)](https://smithery.ai/servers/saif-elyzal/NEXUSRUN)
 
 ---
 
