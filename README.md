@@ -1,6 +1,6 @@
 # NEXUS AI
 
-**Full-stack application platform. Deploy full-stack apps from a prompt, a repo, or a CLI. Your AI agent runs the rest.**
+**NEXUS AI infrastructure platform. Build apps with AI, or deploy them from a prompt, a repo, or a CLI. Your AI agent runs the rest.**
 
 [![Website](https://img.shields.io/badge/Website-nexusai.run-0ea5e9?style=flat-square)](https://nexusai.run)
 [![Pricing](https://img.shields.io/badge/Pricing-from%20%2429%2Fmo-38bdf8?style=flat-square)](https://nexusai.run/pricing)
@@ -13,17 +13,17 @@
 
 ## What is NEXUS AI?
 
-NEXUS AI is an **Full-stack application platform** that deploys full-stack containerized applications (app code, Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, encrypted backups) in about 5 minutes. Every platform action is callable as a Model Context Protocol (MCP) tool, so Claude, Cursor, Codex, or any MCP-compatible agent can deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
+NEXUS AI is an **MCP-native application platform** that builds and deploys full-stack containerized applications (app code, Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, encrypted backups) in about 5 minutes. It includes an **AI App Builder** (chat to live preview to deploy), **standalone managed databases** on NEXUS AI or your own AWS, Google Cloud, or Azure account, and an **AI Gateway** for routing model traffic. Every platform action is callable as a Model Context Protocol (MCP) tool, so Claude, Cursor, Codex, or any MCP-compatible agent can build, deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
 
 **The problem it solves.** AI tools like Claude Code, Cursor, v0, Bolt, Lovable, and Replit can generate working application code in minutes. Getting that code into production still requires the rest of a real stack: a database, a queue, storage, secrets, scaling, health checks, backups, rollbacks. NEXUS AI is the deploy layer that closes that gap and exposes every operation to the agent that wrote the code.
 
-**In one sentence.** Describe what you want to build, ship to a public HTTPS URL with Postgres + Redis + S3 in 5 minutes, then let your AI agent operate the stack on your behalf.
+**In one sentence.** Describe what you want to build, preview it live, ship to a public HTTPS URL with Postgres + Redis + S3 in 5 minutes, then let your AI agent operate the stack on your behalf.
 
 ---
 
 ## How It Works
 
-Three equivalent ways to deploy the same app. Pick one or use all three.
+Four equivalent ways to get the same app running. Pick one or use all of them.
 
 ```
 PROMPT
@@ -40,6 +40,11 @@ REPO
     --services postgresql,redis \
     --bucket user-uploads --wait
 
+BUILDER
+  Describe the app at https://nexusai.run/builder. Watch it render in a
+  live preview, edit the code or click an element to change it, then
+  press Deploy. Same pipeline as the CLI.
+
 DASHBOARD
   Click through the same operations at https://nexusai.run/app.
   Same engine, same result.
@@ -51,20 +56,34 @@ After deploy, the agent (or you) operates the running stack: stream logs, scale 
 
 ## Core Features
 
+### AI App Builder
+Chat-driven app builder with a live, sandboxed preview. Generates React apps and full-stack Next.js + Prisma apps, including an auto-provisioned managed Postgres database and built-in email/password auth. The preview self-heals (up to two automatic AI fix attempts on build errors), and a "Fix with AI" action repairs a failed deploy and redeploys against the same database. Also included:
+- Click-to-edit element selection and image attachments the AI can see (mockups, bug screenshots)
+- A restorable checkpoint on every turn, plus push to a new or existing GitHub repository
+- Import an existing GitHub repo: Next.js and Vite get a hot-reload dev container, and Django, Rails, Laravel, FastAPI and other frameworks get a real running preview
+- MCP handoff: `nexusai_builder_push` sends files generated in Claude, Cursor, or ChatGPT into the builder for a free instant preview, and `nexusai_builder_pull` reads edits back
+- Model picker with Claude (Fable 5.1, Opus 5), OpenAI (GPT-6 Astra), Google (Gemini 3.8 Flash, the managed default on the Free plan), and xAI Grok, plus bring-your-own-key AI providers
+
 ### Full-stack deploys in one command
 Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, and your app code. Wired together by one `nexus deploy` and live at a public HTTPS URL in 5 minutes. Framework detection covers FastAPI, Flask, Django, Express, Next.js, Rails, Laravel, Symfony, PHP, Ruby, Go, Java, and any container.
 
 ### Operated by your AI agent
-59 MCP tools cover the full lifecycle. Connect the NEXUS AI MCP server (`https://api.zollo.live/mcp`) to Claude Desktop, Claude Code, Cursor, Codex, or any MCP client. The same agent that generated the code can deploy, scale, back up, restore, query the database, and roll back. Listed on the official MCP Registry at `io.github.nexusrun/nexus-ai`.
+74 MCP tools cover the full lifecycle. Connect the NEXUS AI MCP server (`https://mcp.nexusai.run/mcp`) to Claude Desktop, Claude Code, Cursor, Codex, or any MCP client. The same agent that generated the code can deploy, scale, back up, restore, query the database, and roll back. Listed on the official MCP Registry at `io.github.nexusrun/nexus-ai`.
 
 ### Persistent storage with real IAM
 Org-scoped volumes that survive container restarts, redeploys, and host reboots. Multi-attach S3-compatible buckets backed by MinIO, each with its own scoped IAM service account (not platform-wide root credentials). Per-bucket credential rotation, signed download URLs (30 seconds to 1 hour TTL), streaming uploads.
+
+### Standalone managed databases
+Databases are their own resource, not part of an app. Create PostgreSQL or Redis on NEXUS AI (`--local`), or PostgreSQL and MySQL on AWS RDS, Google Cloud SQL, or Azure Database. Set your own database name, username, and password, attach to any deployment (env vars are injected on the next deploy, `REDIS_URL` for Redis), detach without losing data, and snapshot or restore into a new database. Private cloud databases are reached through an in-VPC/VNet proxy, so they are never exposed publicly. Run SQL from the CLI (`nexus managed-db query shop "SELECT ..."`), the dashboard, or MCP. Redeploying or deleting an app leaves the database untouched.
+
+### AI Gateway
+An OpenAI- and Anthropic-compatible gateway (`/v1`, `/v1/messages`) with failover and routing, virtual model aliases, caching, budgets and rate limits, usage and cost tracking, guardrails, audit logs, and an MCP gateway that aggregates servers behind one endpoint. Provider keys stay in the gateway. Supports Anthropic, OpenAI, Google Gemini, xAI Grok, OpenRouter, and any OpenAI-compatible endpoint. Self-hostable on NEXUS AI. [nexusai.run/ai-gateway](https://nexusai.run/ai-gateway)
 
 ### Database intelligence layer
 Connect external Postgres, MySQL, or Mongo databases. Inspect schemas (cached for 5 minutes). Preview queries with `EXPLAIN` + safety analysis. Execute sandboxed SELECT statements with statement timeouts and row caps. Apply AI-proposed DDL fixes generated from runtime error logs (with review and audit).
 
 ### Encrypted backups, signed downloads
-Scheduled or on-demand backups for Postgres (`pg_dump`), MySQL (`mysqldump`), Mongo (`mongodump`), and Redis (`BGSAVE`). Encrypted at rest. Download via short-lived signed URLs (TTL 30s to 1h) or restore directly. Cross-deployment restore (seed staging from production) supported.
+Scheduled or on-demand backups for Postgres (`pg_dump`), MySQL (`mysqldump`), Mongo (`mongodump`), and Redis (`BGSAVE`). Encrypted at rest. Scheduled backups default to 7-day retention and prune automatically (configurable, never below 7 days). Download via short-lived signed URLs (TTL 30s to 1h) or restore directly. Cross-deployment restore (seed staging from production) supported.
 
 ### Production-safe lifecycle
 Soft stop preserves containers, networks, volumes, and the port reservation so the next start brings everything back. Boot reconciliation restarts deployments the host reboot did not bring back. Versioned rollback in seconds. Replica count preserved across restart.
@@ -82,7 +101,10 @@ Streaming build and runtime logs over WebSocket. Health checks with configurable
 AES-256-GCM encryption. Injected at container start, never written to images, never returned over the API, never appear in logs. Scoped per organization and environment with full audit trail on every read, write, and deletion.
 
 ### Role-based access control and tenant isolation
-Org-level roles (Owner, Admin, Developer). Per-org isolated runtime, networks, volumes, and S3 buckets. SAML / OIDC SSO available on Enterprise. Independently scoped and revocable API tokens with 23 fine-grained OAuth scopes (`deployments:read`, `db:admin`, `volumes:manage`, `buckets:manage`, etc.) plus four legacy broad scopes preserved for backward compatibility.
+Org-level roles (Owner, Admin, Developer). Per-org isolated runtime, networks, volumes, and S3 buckets. SAML / OIDC SSO available on Enterprise. Independently scoped and revocable API tokens with fine-grained OAuth scopes (`deployments:read`, `db:admin`, `managed_db:manage`, `volumes:manage`, `buckets:manage`, etc.) plus four legacy broad scopes preserved for backward compatibility.
+
+### Support and custom domains
+Custom domains on Starter and above. Support by plan: community on Free, email and tickets on Starter, plus phone on Pro, dedicated SLA on Enterprise. Agents can open and reply to support tickets over MCP. See the [customer support page](https://nexusai.run/customer-support).
 
 ### HIPAA-aligned infrastructure
 Tenant isolation, encrypted secrets, encrypted backups, scoped per-bucket IAM, full audit logs, customer-owned cloud deployments for Enterprise, BAA available for Healthcare Pro and Enterprise.
@@ -119,31 +141,37 @@ Install in any MCP client by searching "NEXUS AI" in the client's MCP marketplac
 
 | Plan | Price | Best For |
 |---|---|---|
+| **Free** | $0 | Testing, development, and evaluation (solo use) |
 | **Starter** | $29/month | Individual developers, early experiments |
 | **Pro** | $149/month | Startups, SaaS teams, multi-cloud workloads |
-| **Healthcare Starter** | $149/month | Regulated healthcare, HIPAA-aligned |
+| **Healthcare Starter** | $49/month | Sandbox for HIPAA-aligned proofs of concept (not for PHI in production) |
 | **Healthcare Pro** | $299/month | Full audit logs, RBAC, compliance controls |
-| **Enterprise** | Custom | On-prem, private runtime, SSO, dedicated SLA |
+| **Enterprise** | Custom | Customer-owned cloud, SSO, dedicated SLA |
+| **Enterprise On-Prem** | Custom | Self-hosted, air-gapped and restricted networks |
+
+### Free at $0
+- 1 active deployment on NEXUS AI managed infrastructure
+- 5 AI requests per day, 3 secrets, public HTTPS endpoint
+- Community support
+- For testing and development. See the [Free plan usage policy](https://nexusai.run/free-plan-usage-policy)
 
 ### Starter at $29/month
-- Application Generation Engine
+- Application Generation Engine, 10 AI requests per day
 - NEXUS AI managed Container platform (shared runtime)
-- 2 concurrent deployments
-- Public HTTPS endpoint
-- Google Cloud Run single-container deployment target
-- Community support
+- 2 active deployments, Google Cloud Run target
+- Public HTTPS endpoint and custom domain
+- Email support and support tickets
+- Standalone databases
 
 ### Pro at $149/month
-- Everything in Starter
-- Multi-cloud single-container deploys (AWS App Runner, Google Cloud Run, Azure Container Apps)
+- Everything in Starter, 30 AI requests per day
+- Multi-cloud deploys (AWS App Runner, Google Cloud Run, Azure Container Apps)
 - 5 active deployments, up to 10 concurrent containers
-- Versioned deployments + one-click rollback
+- Versioned deployments and one-click rollback
 - Real-time build and runtime observability
-- Encrypted secrets vault
-- Storage volumes + buckets
-- Database backups
-- Team access with RBAC
-- Email support
+- AES-256-GCM secrets vault
+- Team access with RBAC (up to 10 members)
+- Phone support on top of email and tickets
 
 ### Enterprise (custom)
 - Everything in Pro
@@ -151,10 +179,9 @@ Install in any MCP client by searching "NEXUS AI" in the client's MCP marketplac
 - Private build and runtime isolation
 - Unlimited deployments and versions
 - Advanced audit logs (HIPAA / SOC-ready)
-- SSO (SAML / OIDC)
-- IP allowlisting and network controls
-- Air-gapped and on-premises deployment support
+- SSO (SAML / OIDC), IP allowlisting, and network controls
 - Dedicated support and SLA
+- Enterprise On-Prem adds air-gapped and on-premises deployment
 
 [View full pricing](https://nexusai.run/pricing) · [Healthcare pricing](https://nexusai.run/pricing/healthcare)
 
@@ -165,25 +192,27 @@ Install in any MCP client by searching "NEXUS AI" in the client's MCP marketplac
 | Capability | NEXUS AI | Vercel | Render | Railway | Fly.io |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Full-stack in one command (DB + Redis + storage + workers + code) | ✅ | partial | ✅ | ✅ | ✅ |
-| Native MCP tools for AI agents (50+) | ✅ | — | — | — | — |
-| AI-powered DB schema fixes from runtime logs | ✅ | — | — | — | — |
-| Per-bucket IAM out of the box | ✅ | — | — | — | partial |
-| Encrypted DB backups with signed download URLs | ✅ | — | ✅ | ✅ | partial |
-| Single CLI command for full stack | ✅ | — | partial | partial | ✅ |
-| Built for agent-driven workflows | ✅ | — | — | — | — |
-| Multi-cloud single-container target | ✅ | — | — | — | — |
-| Customer-owned cloud accounts (BYOC) | ✅ (Enterprise) | — | — | — | — |
-| Production rollback | ✅ (one-click) | — | partial | partial | partial |
+| Native MCP tools for AI agents (70+) | ✅ | no | no | no | no |
+| AI-powered DB schema fixes from runtime logs | ✅ | no | no | no | no |
+| Built-in AI app builder with live preview | ✅ | ✅ | no | no | no |
+| Built-in AI gateway (routing, caching, budgets) | ✅ | partial | no | no | no |
+| Per-bucket IAM out of the box | ✅ | no | no | no | partial |
+| Encrypted DB backups with signed download URLs | ✅ | no | ✅ | ✅ | partial |
+| Single CLI command for full stack | ✅ | no | partial | partial | ✅ |
+| Built for agent-driven workflows | ✅ | no | no | no | no |
+| Multi-cloud single-container target | ✅ | no | no | no | no |
+| Customer-owned cloud accounts (BYOC) | ✅ (Enterprise) | no | no | no | no |
+| Production rollback | ✅ (one-click) | no | partial | partial | partial |
 | AES-256-GCM secrets vault | ✅ | basic | basic | basic | basic |
 | Real-time WebSocket logs | ✅ | basic | basic | basic | basic |
-| HIPAA-aligned | ✅ | — | — | — | — |
+| HIPAA-aligned | ✅ | no | no | no | no |
 
 ---
 
 ## Who Uses NEXUS AI
 
 ### AI app builders
-Ship apps generated by Claude Code, Cursor, v0, Bolt, Lovable, or Replit with a real database, real storage, and a real public URL in 5 minutes. Let the same agent that wrote the code operate the deploy.
+Build in the NEXUS AI Builder, or ship apps generated by Claude Code, Cursor, v0, Bolt, Lovable, or Replit, with a real database, real storage, and a real public URL in 5 minutes. Let the same agent that wrote the code operate the deploy.
 
 ### Teams building agent products
 Expose your platform actions as MCP tools so end-user agents can deploy, operate, and scale on your customers' behalf.
@@ -193,6 +222,9 @@ Launch new ideas without spending a week on infrastructure. Stand up new apps wi
 
 ### Platform and DevOps teams
 Give every internal team a self-service deploy path with audit logs, RBAC, and rollback baked in. No tickets, no glue scripts.
+
+### Role-specific guides
+Dedicated pages for [developers](https://nexusai.run/solutions/developers), [founders](https://nexusai.run/solutions/founder), [sales](https://nexusai.run/solutions/sales), [product managers](https://nexusai.run/solutions/product-managers), [small business](https://nexusai.run/solutions/small-business), [entrepreneurs](https://nexusai.run/solutions/entrepreneur), and [vibe coders](https://nexusai.run/solutions/vibe-coders).
 
 ### Regulated industries (Healthcare and Fintech)
 Deploy into customer-owned cloud infrastructure with HIPAA-aligned controls, full audit trails, tenant isolation, and BAA support.
@@ -243,9 +275,22 @@ nexus deploy redeploy <deployment-id> --wait
 
 Your app receives `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` as environment variables. Use any S3 SDK against the scoped per-bucket service account.
 
-### 4. Operate from your agent
+### 4. Create a standalone database and query it
 
-Connect the NEXUS AI MCP server to Claude Desktop, Claude Code, Cursor, or Codex (`https://api.zollo.live/mcp`). The agent can then run commands like:
+```bash
+nexus managed-db create shop --local --engine postgres
+nexus managed-db attach shop --deployment my-app
+nexus deploy redeploy my-app --wait
+
+nexus managed-db query shop "SELECT count(*) FROM orders"
+nexus managed-db connection shop --url-only
+```
+
+Always quote the SQL. Queries run one statement at a time, and `CREATE DATABASE`, `DROP DATABASE`, and `GRANT` are blocked. Full CLI reference: [`wiki/CLI.md`](wiki/CLI.md).
+
+### 5. Operate from your agent
+
+Connect the NEXUS AI MCP server to Claude Desktop, Claude Code, Cursor, or Codex (`https://mcp.nexusai.run/mcp`). The agent can then run commands like:
 
 > "Take a Postgres backup of my-app, run the migration, and roll back if anything fails."
 
@@ -257,21 +302,23 @@ The agent calls `nexusai_db_services_list`, `nexusai_db_backup`, then conditiona
 
 ## API and MCP Integration
 
-NEXUS AI exposes a REST API and a full MCP server with **59 tools across 9 categories**:
+NEXUS AI exposes a REST API and a full MCP server with **74 tools across 11 categories**:
 
 | Category | Tools | Example |
 |---|---:|---|
-| Identity and discovery | 4 | `nexusai_whoami`, `nexusai_projects_list` |
-| Deployments | 14 | `nexusai_deploy_create`, `nexusai_deploy_source`, `nexusai_deploy_scale`, `nexusai_deploy_rollback` |
+| Identity and discovery | 4 | `nexusai_whoami`, `nexusai_projects_list`, `nexusai_usage_stats` |
+| Deployments | 15 | `nexusai_deploy_create`, `nexusai_deploy_source`, `nexusai_deploy_scale`, `nexusai_deploy_rollback` |
 | Secrets | 4 | `nexusai_secrets_create`, `nexusai_secrets_list` |
 | Custom domains | 4 | `nexusai_domains_add`, `nexusai_domains_verify` |
-| External database sources / DB intelligence | 8 | `nexusai_db_inspect_schema`, `nexusai_db_query_execute`, `nexusai_db_propose_fix` |
-| Database backups | 7 | `nexusai_db_backup`, `nexusai_db_restore`, `nexusai_db_backup_download` |
+| External database sources / DB intelligence | 9 | `nexusai_db_inspect_schema`, `nexusai_db_query_execute`, `nexusai_db_propose_fix` |
+| Database backups | 6 | `nexusai_db_backup`, `nexusai_db_restore`, `nexusai_db_backup_download` |
+| Managed (standalone) databases | 11 | `nexusai_managed_db_create`, `nexusai_managed_db_query`, `nexusai_managed_db_attach` |
 | Persistent storage volumes | 5 | `nexusai_volume_create`, `nexusai_volume_attach` |
-| S3-compatible buckets | 9 | `nexusai_bucket_create`, `nexusai_bucket_attach`, `nexusai_bucket_rotate_credentials`, `nexusai_bucket_file_download` |
+| S3-compatible buckets | 10 | `nexusai_bucket_create`, `nexusai_bucket_file_upload`, `nexusai_bucket_rotate_credentials` |
+| AI App Builder | 2 | `nexusai_builder_push`, `nexusai_builder_pull` |
 | Support tickets | 4 | `nexusai_support_ticket_create`, `nexusai_support_ticket_reply` |
 
-**OAuth scopes.** 23 scopes total: 4 legacy broad scopes (`deployments:{read,logs,create,delete}`) kept for backward compatibility, plus 18 fine-grained scopes (`secrets:{read,manage,delete}`, `domains:{read,manage,delete}`, `db:{read,query,admin,source:delete}`, `volumes:{read,manage,delete}`, `buckets:{read,manage,delete}`, `support:{read,write}`). Old tokens continue to satisfy fine-grained checks via `SCOPE_SUPERSETS`.
+**OAuth scopes.** 4 legacy broad scopes (`deployments:{read,logs,create,delete}`) kept for backward compatibility, plus fine-grained scopes (`secrets:{read,manage,delete}`, `domains:{read,manage,delete}`, `db:{read,query,admin,source:delete}`, `volumes:{read,manage,delete}`, `buckets:{read,manage,delete}`, `managed_db:{read,manage,delete}`, `support:{read,write}`). Old tokens continue to satisfy fine-grained checks via `SCOPE_SUPERSETS`.
 
 ### Connect from Claude Desktop
 
@@ -281,8 +328,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 {
   "mcpServers": {
     "nexus-ai": {
-      "url": "https://api.zollo.live/mcp",
-      "headers": { "Authorization": "Bearer <your-nexus-token>" }
+      "type": "http",
+      "url": "https://mcp.nexusai.run/mcp"
     }
   }
 }
@@ -291,24 +338,52 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 ### Connect from Claude Code
 
 ```bash
-claude mcp add nexus-ai \
-  --url https://api.zollo.live/mcp \
-  --header "Authorization: Bearer <your-nexus-token>"
+claude mcp add --transport http nexus-ai https://mcp.nexusai.run/mcp
 ```
 
 ### Connect from Cursor
 
-Cursor Settings, MCP, Add server with the same URL and Bearer token.
+Cursor Settings, MCP, Add server, with the same URL.
 
-Generate tokens at [nexusai.run/app/tokens](https://nexusai.run/app/tokens). Full MCP reference at [nexusai.run/docs#mcp-overview](https://nexusai.run/docs#mcp-overview).
+The MCP server authenticates with OAuth 2.0 + PKCE. Claude Code, Claude Desktop, and Cursor run the sign-in in a browser on first connect. For headless clients, mint an OAuth token with the PKCE flow ([nexusai.run/docs#mcp-oauth-flow](https://nexusai.run/docs#mcp-oauth-flow)) and send it as `Authorization: Bearer <token>`. Full MCP reference at [nexusai.run/docs#mcp-overview](https://nexusai.run/docs#mcp-overview).
 
 [API Documentation](https://nexusai.run/docs)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, TypeScript, Vite 7, Tailwind CSS |
+| Backend | Node.js, Express, TypeScript |
+| ORM | Prisma |
+| Database | PostgreSQL |
+| Cache | Redis |
+| Object storage (managed) | MinIO (S3-compatible, per-bucket IAM service accounts) |
+| Ingress | Traefik (per-deployment networks, Let's Encrypt certificates) |
+| Container runtime | Docker (Compose for full-stack deploys) |
+| OAuth | PKCE + auth code, JWT access tokens, fine-grained scopes |
+| Encryption | AES-256-GCM (secrets, bucket credentials), TLS 1.2+ (transit) |
+| Auth | JWT + optional SAML / OIDC SSO |
+| Cloud single-container targets | AWS App Runner, Google Cloud Run, Azure Container Apps |
+| Managed cloud databases | AWS RDS, Google Cloud SQL, Azure Database (Flexible Server) |
+| AI providers | Anthropic, OpenAI, Google Gemini, xAI Grok, OpenRouter, OpenAI-compatible endpoints |
+| Builder preview | esbuild-wasm sandboxed iframe, hot-reload dev containers for imported repos |
+| CLI | Node.js (`nexus`, npm package in `cli/`) |
+| Process supervision | systemd (`nexus-backend.service` with `StateDirectory=nexus/deployments nexus/docker`) |
 
 ---
 
 ## Reliability
 
 NEXUS AI is built to keep stateful apps alive across host reboots, backend restarts, and manual stop/start cycles. The reliability layer:
+
+- **Persistent compose workdirs** at `/var/lib/nexus/deployments` so the orchestrator survives `PrivateTmp` and `tmpfs` wipes
+- **Soft stop semantics**: `docker compose stop` (not `down`) preserves containers, networks, volumes, and the port reservation
+- **Boot reconciliation** runs 5 seconds after backend startup, verifies every `RUNNING` deployment is actually running, and restarts any that are down
+- **Replica preservation** across restart: scale state survives stop/start and reboot
+- **`restart: unless-stopped`** on every container so Docker brings them back automatically
 
 Deep dive: [How NEXUS AI keeps your Postgres alive across host reboots](https://nexusai.run/blog/how-nexus-ai-keeps-your-postgres-alive-across-host-reboots).
 
@@ -322,7 +397,7 @@ Deep dive: [How NEXUS AI keeps your Postgres alive across host reboots](https://
 - **Per-bucket IAM**: every S3 bucket ships with a scoped MinIO service account, not platform-wide root credentials. Rotatable via `nexusai_bucket_rotate_credentials`.
 - **Zero plaintext credentials**: Secrets never appear in code, container images, build logs, or runtime logs
 - **Audit logging**: Every action (deployment, secret access, scope use, backup, restore, config change) logged with timestamp, actor identity (user or agent token name), and result
-- **RBAC + scoped tokens**: Role-based access at organization and deployment level, plus 23 fine-grained OAuth scopes for least-privilege automation
+- **RBAC + scoped tokens**: Role-based access at organization and deployment level, plus fine-grained OAuth scopes for least-privilege automation
 - **Private runtimes**: Enterprise customers run fully isolated build and runtime environments
 - **IP allowlisting**: Network-level access controls for Enterprise deployments
 
@@ -352,10 +427,16 @@ NEXUS AI provides HIPAA-aligned technical safeguards for regulated healthcare en
 ## Frequently Asked Questions
 
 **What is NEXUS AI?**
-NEXUS AI is an MCP-native application platform that deploys full-stack containerized applications (Postgres, MySQL, Mongo, Redis, S3 buckets, persistent volumes, workers, encrypted backups) in 5 minutes. Every platform action is callable as an MCP tool, so Claude, Cursor, Codex, and any MCP-compatible agent can deploy, scale, back up, restore, query the database, and roll back without leaving the chat.
+NEXUS AI is an MCP-native application platform that builds and deploys full-stack containerized applications (Postgres, MySQL, Mongo, Redis, S3 buckets, persistent volumes, workers, encrypted backups) in 5 minutes, with an AI App Builder, standalone managed databases, and an AI Gateway. Every platform action is callable as an MCP tool, so Claude, Cursor, Codex, and any MCP-compatible agent can deploy, scale, back up, restore, query the database, and roll back without leaving the chat.
 
 **Where can I install the NEXUS AI MCP server?**
-The official MCP Registry lists it at `io.github.nexusrun/nexus-ai`. Also indexed at mcp.so and Smithery. Direct endpoint: `https://api.zollo.live/mcp`.
+The official MCP Registry lists it at `io.github.nexusrun/nexus-ai`. Also indexed at mcp.so and Smithery. Direct endpoint: `https://mcp.nexusai.run/mcp`.
+
+**Can I build an app inside NEXUS AI?**
+Yes. The AI App Builder turns a prompt into a live preview, supports full-stack Next.js + Prisma apps with a managed database and built-in auth, and deploys through the same pipeline as the CLI. You can also import an existing GitHub repo, push to GitHub, or hand files back and forth with Claude over MCP.
+
+**Do databases live and die with my app?**
+No. Standalone managed databases belong to your organization. Redeploying, stopping, or deleting an app leaves the database and its data untouched. Attach and detach at any time.
 
 **Which AI tools generate apps that NEXUS AI deploys?**
 NEXUS AI deploys from any Git repository. Apps generated by Claude Code, Cursor, v0, Bolt, Lovable, Replit, Windsurf, or any other tool work the same way: push the result to GitHub and run `nexus deploy source --repo <url>`.
@@ -385,7 +466,7 @@ Secrets are encrypted with AES-256-GCM and injected at container runtime only. T
 Persistent volumes survive container restarts and host reboots. Boot reconciliation restarts any deployments the reboot did not bring back. Postgres / MySQL / Mongo crash recovery happens via their own journaling on next start. Full deep dive: [How NEXUS AI keeps your Postgres alive across host reboots](https://nexusai.run/blog/how-nexus-ai-keeps-your-postgres-alive-across-host-reboots).
 
 **How is NEXUS AI different from Vercel, Render, Railway, or Fly.io?**
-NEXUS AI is the only platform that combines (1) full-stack deploys in one command, (2) 59 MCP tools for AI agents to operate the platform end-to-end, (3) AI-powered database schema fixes from runtime logs, (4) per-bucket IAM out of the box, (5) HIPAA-aligned controls with customer-owned cloud deployments. See the comparison table above.
+NEXUS AI is the only platform that combines (1) full-stack deploys in one command, (2) 74 MCP tools for AI agents to operate the platform end-to-end, (3) AI-powered database schema fixes from runtime logs, (4) per-bucket IAM out of the box, (5) HIPAA-aligned controls with customer-owned cloud deployments. See the comparison table above.
 
 ---
 
@@ -408,6 +489,11 @@ Recent engineering and product posts:
 |---|---|
 | Website | [nexusai.run](https://nexusai.run) |
 | Documentation | [nexusai.run/docs](https://nexusai.run/docs) |
+| CLI reference | [`wiki/CLI.md`](wiki/CLI.md) |
+| AI App Builder | [nexusai.run/builder](https://nexusai.run/builder) |
+| AI Gateway | [nexusai.run/ai-gateway](https://nexusai.run/ai-gateway) |
+| Databases | [nexusai.run/databases](https://nexusai.run/databases) |
+| Customer support | [nexusai.run/customer-support](https://nexusai.run/customer-support) |
 | MCP Reference | [nexusai.run/docs#mcp-overview](https://nexusai.run/docs#mcp-overview) |
 | Pricing | [nexusai.run/pricing](https://nexusai.run/pricing) |
 | Healthcare Pricing | [nexusai.run/pricing/healthcare](https://nexusai.run/pricing/healthcare) |
@@ -431,9 +517,3 @@ Recent engineering and product posts:
 ---
 
 © 2026 NEXUS AI, Inc. Built for engineers who ship.
-- [![smithery badge](https://smithery.ai/badge/saif-elyzal/NEXUSRUN)](https://smithery.ai/servers/saif-elyzal/NEXUSRUN)
-- [![smithery badge](https://smithery.ai/badge/sali/nexusai)](https://smithery.ai/servers/sali/nexusai)
-
----
-
-© 2026 NEXUS AI, Inc. — Built for engineers who ship.
