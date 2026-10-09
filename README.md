@@ -1,6 +1,6 @@
 # NEXUS AI
 
-**NEXUS AI infrastructure platform. Build apps with AI, or deploy them from a prompt, a repo, or a CLI. Your AI agent runs the rest.**
+**The AI creation platform. Describe an app, watch it build, preview and share it, then deploy the full stack to production. Your AI agent runs the rest.**
 
 [![Website](https://img.shields.io/badge/Website-nexusai.run-0ea5e9?style=flat-square)](https://nexusai.run)
 [![Pricing](https://img.shields.io/badge/Pricing-from%20%2429%2Fmo-38bdf8?style=flat-square)](https://nexusai.run/pricing)
@@ -15,7 +15,11 @@
 
 ## What is NEXUS AI?
 
-NEXUS AI is **infrastructure platform** that builds and deploys full-stack containerized applications (app code, Postgres, MySQL, Mongo, Redis, S3-compatible buckets, persistent volumes, background workers, encrypted backups) in about 5 minutes. It includes an **AI App Builder** (chat to live preview to deploy), **standalone managed databases** on NEXUS AI or your own AWS, Google Cloud, or Azure account, and an **AI Gateway** for routing model traffic. Every platform action is callable as a Model Context Protocol (MCP) tool, so Claude, Cursor, Codex, or any MCP-compatible agent can build, deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
+NEXUS AI is an **agentic AI app builder and deployment platform**. You describe what you want in plain words, and NEXUS AI builds it, verifies it, shows you a live preview you can share or remix, and deploys it when you're ready.
+
+Every deploy ships the whole stack, already connected: app code, Postgres, MySQL, Mongo or Redis, S3-compatible buckets, persistent volumes, background workers, and encrypted backups, plus Stripe payments when your app needs them. Run it on NEXUS AI managed infrastructure or in your own AWS, Google Cloud, or Azure account.
+
+It also includes **standalone managed databases**, an **AI Gateway** for routing model traffic, and **74 MCP tools**, so Claude, Cursor, Codex, or any MCP-compatible agent can build, deploy, scale, back up, restore, query the database, and roll back without leaving the chat or IDE.
 
 **The problem it solves.** AI tools like Claude Code, Cursor, v0, Bolt, Lovable, and Replit can generate working application code in minutes. Getting that code into production still requires the rest of a real stack: a database, a queue, storage, secrets, scaling, health checks, backups, rollbacks. NEXUS AI is the deploy layer that closes that gap and exposes every operation to the agent that wrote the code.
 
