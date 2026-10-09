@@ -360,6 +360,119 @@ The MCP server authenticates with OAuth 2.0 + PKCE. Claude Code, Claude Desktop,
 
 ---
 
+## Tools
+
+The NEXUS AI MCP server (`https://mcp.nexusai.run/mcp`, streamable HTTP, OAuth or Bearer token) exposes 74 tools.
+
+### Identity and discovery
+
+- `nexusai_whoami`: Returns the authenticated NEXUS AI user and tenant context.
+- `nexusai_projects_list`: Lists projects available in the current tenant.
+- `nexusai_providers_list`: Lists deployment providers allowed for the tenant plan.
+- `nexusai_usage_stats`: Returns usage statistics, quotas, and deployment counts for the organization.
+
+### AI App Builder
+
+- `nexusai_builder_push`: Push a generated app file set into the project's AI Builder session.
+- `nexusai_builder_pull`: Read the current file set of the project's AI Builder session (latest snapshot, including any edits made in the builder UI) so you can continue iterating in chat.
+
+### Deployments
+
+- `nexusai_deploy_list`: Lists deployments available to the authenticated tenant.
+- `nexusai_deploy_status`: Returns status details for a deployment.
+- `nexusai_deploy_logs`: Returns recent log lines for a deployment.
+- `nexusai_deploy_create`: Create a deployment from a container image on NEXUS AI managed infrastructure or a connected AWS, Google Cloud or Azure account.
+- `nexusai_deploy_openclaw`: Deploy an OpenClaw gateway service (alpine/openclaw:latest) on port 18789.
+- `nexusai_deploy_flixty`: Deploy Flixty.
+- `nexusai_deploy_source`: Deploy from a Git repository, optionally a sub-folder (rootDir), to NEXUS AI managed infrastructure or a connected AWS, Google Cloud or Azure account.
+- `nexusai_deploy_redeploy`: Rebuild a deployment IN PLACE by default: same deployment id and URL, with attached managed databases, volumes, secrets and env vars preserved (override env via overrides.envVars).
+- `nexusai_deploy_rollback`: Rollback by redeploying a previous deployment revision in the same project.
+- `nexusai_deploy_stop`: Stop a running deployment without deleting it.
+- `nexusai_deploy_start`: Start a stopped deployment.
+- `nexusai_deploy_delete`: Permanently delete a deployment and free its resources.
+- `nexusai_deploy_scale`: Scale a running deployment to the specified number of replicas (1-10).
+- `nexusai_deploy_auto_destroy`: Set, extend, reduce, or disable the auto-destroy schedule for a deployment without restarting it.
+- `nexusai_deploy_health`: Returns health check status and recent health logs for a deployment.
+
+### Secrets
+
+- `nexusai_secrets_list`: Lists all secrets for the organization (values are hidden).
+- `nexusai_secrets_create`: Create a new secret for the organization.
+- `nexusai_secrets_update`: Update an existing secret.
+- `nexusai_secrets_delete`: Delete a secret from the organization.
+
+### Custom domains
+
+- `nexusai_domains_add`: Add a custom domain to a deployment.
+- `nexusai_domains_list`: List custom domains attached to a deployment.
+- `nexusai_domains_verify`: Trigger DNS verification for a custom domain.
+- `nexusai_domains_remove`: Remove a custom domain from a deployment.
+
+### Managed databases
+
+- `nexusai_managed_db_list`: List org-scoped managed cloud databases (AWS RDS instances).
+- `nexusai_managed_db_create`: Create a standalone database, independent of any deployment, then attach it to apps.
+- `nexusai_managed_db_delete`: Permanently delete a managed database instance.
+- `nexusai_managed_db_connection`: Reveal connection details, including the password, for a NEXUS_DOCKER (local) database.
+- `nexusai_managed_db_attach`: Inject connection env vars (DATABASE_URL/HOST/PORT/USER/PASSWORD/NAME) into a deployment.
+- `nexusai_managed_db_detach`: Stop injecting the database connection env vars on next deploy.
+- `nexusai_managed_db_snapshot_create`: Take a point-in-time snapshot backup of a managed database (AWS RDS snapshot).
+- `nexusai_managed_db_snapshot_list`: List snapshot backups for a managed database.
+- `nexusai_managed_db_query`: Run a read-only SELECT against a managed database (rejects writes/DDL).
+- `nexusai_managed_db_execute`: Run a write or DDL statement (INSERT/UPDATE/DELETE/CREATE/ALTER/...) against a managed database.
+- `nexusai_managed_db_restore`: Restore a snapshot into a NEW managed database instance (non-destructive).
+
+### Database backups
+
+- `nexusai_db_services_list`: List all database services (postgres, mysql, redis, mongo, etc.) provisioned alongside deployments.
+- `nexusai_db_backup`: Create a backup of a database service in a Docker deployment.
+- `nexusai_db_backup_list`: List available backups for a database service.
+- `nexusai_db_backup_download`: Generate a short-lived signed download URL for a backup file.
+- `nexusai_db_restore`: Restore a database service from a previously created backup.
+- `nexusai_db_restore_to`: Restore a database backup into a different deployment service in the same org.
+- `nexusai_db_backup_schedule`: Enable or disable daily automated backups for a database service.
+
+### Database intelligence (external sources)
+
+- `nexusai_db_source_list`: List all external DB sources for the organization.
+- `nexusai_db_source_connect`: Create & test a new external DB connection.
+- `nexusai_db_source_delete`: Remove an external DB source.
+- `nexusai_db_inspect_schema`: Get normalized schema graph for a DB source.
+- `nexusai_db_query_preview`: Dry-run a SQL query (EXPLAIN + safety analysis).
+- `nexusai_db_query_execute`: Execute confirmed SQL against an external DB source.
+- `nexusai_db_propose_fix`: Analyze deployment log errors and propose DDL fix.
+- `nexusai_db_apply_fix`: Apply a DDL fix previously returned by nexusai_db_propose_fix.
+
+### Volumes
+
+- `nexusai_volume_list`: List org-scoped persistent storage volumes (filesystem mounts).
+- `nexusai_volume_create`: Create a new org-scoped persistent volume.
+- `nexusai_volume_delete`: Delete a volume.
+- `nexusai_volume_attach`: Attach a volume to a deployment at a mount path.
+- `nexusai_volume_detach`: Detach the volume from its current deployment.
+
+### Buckets
+
+- `nexusai_bucket_list`: List org-scoped object-storage buckets (S3-compatible MinIO buckets).
+- `nexusai_bucket_create`: Create a new org-scoped bucket on the shared MinIO instance.
+- `nexusai_bucket_delete`: Delete a bucket.
+- `nexusai_bucket_attach`: Expose the bucket to a deployment via S3_* env vars (S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION).
+- `nexusai_bucket_detach`: Remove the bucket from a deployment.
+- `nexusai_bucket_rotate_credentials`: Generate fresh per-bucket MinIO service-account credentials, replacing the previous ones.
+- `nexusai_bucket_files_list`: List objects in a bucket, optionally filtered by key prefix.
+- `nexusai_bucket_file_upload`: Upload a file to a bucket from base64-encoded content.
+- `nexusai_bucket_file_download`: Issue a short-lived signed URL to download a file from a bucket without an API token.
+- `nexusai_bucket_file_delete`: Delete a single file from a bucket.
+
+### Support tickets
+
+- `nexusai_support_ticket_create`: Submit a new support ticket to the NEXUS AI team.
+- `nexusai_support_ticket_list`: List your organization's support tickets.
+- `nexusai_support_ticket_get`: Get the full details and message thread for a support ticket.
+- `nexusai_support_ticket_reply`: Add a reply message to an existing support ticket.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -512,7 +625,7 @@ Recent engineering and product posts:
 | About | [nexusai.run/about](https://nexusai.run/about) |
 | Contact / Sales | [nexusai.run/contact](https://nexusai.run/contact) |
 | Official MCP Registry | [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.nexusrun/nexus-ai) |
-| mcp.so listing | [mcp.so/server/nexusrun](https://mcp.so/server/nexusrun) |
+| mcp.so listing | [mcp.so/servers/nexusai](https://mcp.so/servers/nexusai) |
 | Smithery listing | [smithery.ai/server/saif-elyzal/NEXUSRUN](https://smithery.ai/server/saif-elyzal/NEXUSRUN) |
 
 ---
