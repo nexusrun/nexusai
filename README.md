@@ -8,6 +8,7 @@
 [![HIPAA](https://img.shields.io/badge/HIPAA-Aligned-10b981?style=flat-square)](https://nexusai.run/hipaa-compliance)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.nexusrun%2Fnexus--ai-7c3aed?style=flat-square)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.nexusrun/nexus-ai)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/nexusrun/nexusai)
+[![NEXUS AI MCP connector – tool definition quality and endpoint health on Glama](https://glama.ai/mcp/connectors/io.github.nexusrun/nexus-ai/badges/score.svg)](https://glama.ai/mcp/connectors/io.github.nexusrun/nexus-ai)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-nexusai--run-0077b5?style=flat-square&logo=linkedin)](https://linkedin.com/company/nexusai-run)
 
 ---
