@@ -137,7 +137,9 @@ Full-stack deploys (app + databases + storage + workers + backups) run on the NE
 |---|---|
 | **Official MCP Registry** | [`io.github.nexusrun/nexus-ai`](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.nexusrun/nexus-ai) |
 | **mcp.so** | [mcp.so/server/nexusrun](https://mcp.so/server/nexusrun) |
-| **Smithery** | [smithery.ai/server/saif-elyzal/NEXUSRUN](https://smithery.ai/server/saif-elyzal/NEXUSRUN) |
+| **Smithery** | [smithery.ai/servers/sali/nexusai](https://smithery.ai/servers/sali/nexusai) |
+| **mcpservers.org** | [mcpservers.org/servers/nexusrun/nexusai](https://mcpservers.org/servers/nexusrun/nexusai) |
+| **Glama** | [glama.ai/mcp/connectors/io.github.nexusrun/nexus-ai](https://glama.ai/mcp/connectors/io.github.nexusrun/nexus-ai) |
 
 Install in any MCP client by searching "NEXUS AI" in the client's MCP marketplace, or via the registry URL above.
 
